@@ -531,7 +531,19 @@ function drawLatencyChart(key){
   const canvas = document.getElementById('latChart');
   if(!canvas || !data) return;
   const ctx = canvas.getContext('2d');
-  const W = canvas.clientWidth; const H = canvas.height; canvas.width = W; // 适配宽度
+  
+  // 修复高DPI屏幕文字模糊问题
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const W = rect.width; 
+  const H = 150; // 固定高度150px
+  
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  
+  ctx.scale(dpr, dpr);
   ctx.clearRect(0,0,W,H);
   const padL=40, padR=10, padT=10, padB=18;
   const isLight = document.body.classList.contains('light');
@@ -576,10 +588,24 @@ window.addEventListener('resize', ()=>{
 function drawLoadChart(key){
   const L = S.loadHist[key];
   const canvas = document.getElementById('loadChart');
-  if(!canvas) return; const ctx = canvas.getContext('2d');
-  if(!L){ ctx.clearRect(0,0,canvas.width,canvas.height); return; }
+  if(!canvas) return; 
+  const ctx = canvas.getContext('2d');
+  
+  // 修复高DPI屏幕文字模糊问题
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const W = rect.width;
+  const H = 120; // 固定高度120px
+  
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  
+  ctx.scale(dpr, dpr);
+  
+  if(!L){ ctx.clearRect(0,0,W,H); return; }
   const l1=L.l1||[], l5=L.l5||[], l15=L.l15||[];
-  const canvasW = canvas.clientWidth; const H = canvas.height; canvas.width = canvasW; const W=canvasW;
   ctx.clearRect(0,0,W,H);
   if(l1.length<2){ ctx.fillStyle='var(--text-dim)'; ctx.font='12px system-ui'; ctx.fillText('暂无负载数据', W/2-42, H/2); return; }
   const all = [...l1,...l5,...l15];
