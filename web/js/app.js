@@ -3,9 +3,7 @@ const S = { updated:0, servers:[], ssl:[], error:false, hist:{}, loadHist:{} };/
 const els = {
   notice: ()=>document.getElementById('notice'),
   last: ()=>document.getElementById('lastUpdate'),
-  serversBody: ()=>document.getElementById('serversBody'),
-  monitorsBody: ()=>document.getElementById('monitorsBody'),
-  sslBody: ()=>document.getElementById('sslBody')
+  serversBody: ()=>document.getElementById('serversBody')
 };
 
 // (清理) 精简进位函数，仅保留最小所需
@@ -81,7 +79,7 @@ function osLabel(os){
 
 async function fetchData(){
   try {
-    const r = await fetch('json/stats.json?_='+Date.now());
+    const r = await fetch('https://tz.xty.app/json/stats.json?_='+Date.now());
     if(!r.ok) throw new Error(r.status);
     const j = await r.json();
     if(j.reload) location.reload();
@@ -119,10 +117,6 @@ function render(){
   els.notice().style.display='none';
   renderServers();
   renderServersCards();
-  renderMonitors();
-  renderMonitorsCards();
-  renderSSL();
-  renderSSLCards();
   updateTime();
 }
 function renderServers(){
@@ -224,10 +218,10 @@ function renderServersCards(){
   wrap.innerHTML = html || '<div class="muted" style="font-size:.75rem;text-align:center;padding:1rem;">无数据</div>';
   wrap.querySelectorAll('.card').forEach(card=>{
     const idx = parseInt(card.getAttribute('data-idx'));
-    card.addEventListener('click', e=>{ 
+    card.addEventListener('click', e=>{
       if(e.target.classList.contains('expand-btn')){ card.classList.toggle('expanded'); e.stopPropagation(); return;}
       if(card.getAttribute('data-online')!=='1') return; // 离线不弹
-      openDetail(idx); 
+      openDetail(idx);
     });
   });
 }
@@ -354,13 +348,7 @@ function updateTime(){
   if(S.updated){ el.textContent = '最后更新: '+ humanAgo(S.updated); }
 }
 
-function bindTabs(){
-  document.getElementById('navTabs').addEventListener('click',e=>{
-    if(e.target.tagName!=='BUTTON') return; const tab=e.target.dataset.tab; 
-    document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b===e.target));
-    document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+tab));
-  });
-}
+// 标签切换功能已移除
 function bindTheme(){
   const btn = document.getElementById('themeToggle');
   const mql = window.matchMedia('(prefers-color-scheme: light)');
@@ -385,7 +373,6 @@ function bindTheme(){
   });
 }
 
-bindTabs();
 bindTheme();
 fetchData();
 setInterval(fetchData, 1000);
@@ -530,7 +517,7 @@ function drawLatencyChart(key){
 // 在每次 render 后若弹窗打开则重绘最新图
 const _oldRender = render;
 render = function(){ _oldRender(); if(S._openDetailKey){ drawLatencyChart(S._openDetailKey); drawLoadChart(S._openDetailKey); } };
-window.addEventListener('resize', ()=>{ 
+window.addEventListener('resize', ()=>{
   if(S._openDetailKey){ drawLatencyChart(S._openDetailKey); drawLoadChart(S._openDetailKey); }
   renderServersCards();
   renderMonitorsCards();
