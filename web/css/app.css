@@ -1,4 +1,49 @@
-:root{--bg:#0f1115;--bg-alt:#171a21;--border:#262a33;--text:#e2e8f0;--text-dim:#7a899d;--accent:#3b82f6;--accent-glow:#60a5fa;--accent-light:#8b5cf6;--danger:#ef4444;--warn:#f59e0b;--ok:#10b981;--radius:10px;--radius-sm:4px;--shadow:0 4px 12px -2px rgba(0,0,0,.4);--font:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans SC',sans-serif;--trans:.25s cubic-bezier(.4,0,.2,1);--logo-start:#3b82f6;--logo-end:#2563eb;--logo-accent-grad-start:#5fa8ff;--logo-accent-grad-end:#93c5fd}
+:root{
+  --bg:#0f1115;
+  --bg-alt:#171a21;
+  --border:#262a33;
+  --text:#e2e8f0;
+  --text-dim:#7a899d;
+  --accent:#3b82f6;
+  --accent-glow:#60a5fa;
+  --accent-light:#8b5cf6;
+  --danger:#ef4444;
+  --warn:#f59e0b;
+  --ok:#10b981;
+  --radius:10px;
+  --radius-sm:4px;
+  --shadow:0 4px 12px -2px rgba(0,0,0,.4);
+  --font:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans SC',sans-serif;
+  --trans:.25s cubic-bezier(.4,0,.2,1);
+  --logo-start:#3b82f6;
+  --logo-end:#2563eb;
+  --logo-accent-grad-start:#5fa8ff;
+  --logo-accent-grad-end:#93c5fd;
+  
+  /* 表格列宽度常量 - 可调整 */
+  --col-protocol-width:60px;      /* 协议列 */
+  --col-monthly-width:140px;       /* 月流量列 */
+  --col-node-width:70px;          /* 节点列 */
+  --col-virt-width:80px;           /* 虚拟化列 */
+  --col-location-width:100px;     /* 位置列 */
+  --col-online-width:60px;         /* 在线列 */
+  --col-load-width:60px;           /* 负载列 */
+  --col-current-width:125px;        /* 当前网络列 */
+  --col-total-width:125px;          /* 总流量列 */
+  --col-cpu-width:45px;            /* CPU列 */
+  --col-memory-width:45px;         /* 内存列 */
+  --col-disk-width:45px;           /* 硬盘列 */
+  --col-ping-width:100px;          /* 联通|电信|移动列 */
+  
+  /* 移动端列宽度常量 */
+  --mobile-col-monthly-width:55px;  /* 移动端月流量列 */
+  --mobile-col-node-width:80px;      /* 移动端节点列 */
+  --mobile-col-load-width:60px;     /* 移动端负载列 */
+  --mobile-col-current-width:125px;   /* 移动端当前网络列 */
+  --mobile-col-total-width:125px;    /* 移动端总流量列 */
+  --mobile-col-cpu-width:45px;      /* 移动端CPU列 */
+  --mobile-col-memory-width:45px;   /* 移动端内存列 */
+}
 body.light{--bg:#f6f7f9;--bg-alt:#ffffff;--border:#e2e8f0;--text:#1e293b;--text-dim:#64748b;--accent:#2563eb;--accent-glow:#3b82f6;--accent-light:#8b5cf6;--shadow:0 4px 20px -4px rgba(0,0,0,.08);--logo-start:#2563eb;--logo-end:#1d4ed8;--logo-accent-grad-start:#1d4ed8;--logo-accent-grad-end:#60a5fa}
 *{box-sizing:border-box}
 html{
@@ -102,7 +147,7 @@ a:hover{color:var(--accent-glow)}
 .panel.active{display:flex}
 .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-alt);box-shadow:var(--shadow)}
 table.data{width:100%;border-collapse:separate;border-spacing:0;min-width:960px}
-table.data thead th{position:sticky;top:0;background:var(--bg-alt);font-weight:500;text-align:left;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:#f1f5f9;padding:.7rem .75rem;border-bottom:1px solid var(--border);white-space:nowrap}
+table.data thead th{position:sticky;top:0;background:var(--bg-alt);font-weight:500;text-align:center;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:#f1f5f9;padding:.7rem .75rem;border-bottom:1px solid var(--border);white-space:nowrap}
 table.data tbody td{padding:.55rem .75rem;border-bottom:1px solid var(--border);font-size:14px;vertical-align:middle;white-space:nowrap;color:#f8fafc}
 body.light table.data thead th{color:#0f172a}
 body.light table.data tbody td{color:#1e293b}
@@ -111,24 +156,34 @@ table.data th,table.data td{font-variant-numeric:tabular-nums}
 /* 月流量(2) 左对齐；当前网络(8)/总流量(9) 居中 */
 #serversTable thead th:nth-child(2),#serversTable tbody td:nth-child(2){
 	/* 月流量列：向左贴近协议（减小左 padding），同时加大右 padding 拉开与节点距离 */
-	width:75px;min-width:75px;max-width:75px;font-variant-numeric:tabular-nums;letter-spacing:.3px;text-align:center;padding:0 1.05rem 0 .15rem;
+	width:var(--col-monthly-width);min-width:var(--col-monthly-width);max-width:var(--col-monthly-width);font-variant-numeric:tabular-nums;letter-spacing:.3px;text-align:center;padding:0 1.05rem 0 .15rem;
 }
 /* 节点列加宽，避免被月流量胶囊视觉挤压 */
 #serversTable thead th:nth-child(3),#serversTable tbody td:nth-child(3){
-	width:120px;min-width:120px;max-width:120px;
+	width:var(--col-node-width);min-width:var(--col-node-width);max-width:var(--col-node-width);text-align:center;
 }
 /* 协议列继续收紧右侧 padding 与固定宽度 */
 #serversTable thead th:nth-child(1),#serversTable tbody td:nth-child(1){
-	padding-right:.14rem;width:70px;min-width:70px;max-width:70px; /* 扩大协议列并恢复适度间距 */
+	padding-right:.14rem;width:70px;min-width:70px;max-width:70px;text-align:center; /* 扩大协议列并恢复适度间距 */
 }
-/* 让双色胶囊更靠近协议列 */
-#serversTable tbody td:nth-child(2) .caps-traffic.duo{margin-left:-6px;} /* 向协议方向微移，视觉更靠近；右侧 padding 增大避免靠近节点 */
+/* 让双色胶囊居中显示 */
+#serversTable tbody td:nth-child(2) .caps-traffic.duo{margin-left:0;} /* 月流量列居中显示，不向左偏移 */
+#serversTable tbody td:nth-child(8) .caps-traffic.duo{margin-left:0;} /* 当前网络列居中显示，不向左偏移 */
+#serversTable tbody td:nth-child(9) .caps-traffic.duo{margin-left:0;} /* 总流量列居中显示，不向左偏移 */
 #serversTable thead th:nth-child(8),#serversTable tbody td:nth-child(8),
 #serversTable thead th:nth-child(9),#serversTable tbody td:nth-child(9){
-	width:75px;min-width:75px;max-width:75px;font-variant-numeric:tabular-nums;letter-spacing:.3px;text-align:center;
-	    /* 进一步拉开与 CPU/内存/硬盘 组的视觉距离 */
-	    padding-right:1.95rem;
+	width:var(--col-current-width);min-width:var(--col-current-width);max-width:var(--col-current-width);font-variant-numeric:tabular-nums;letter-spacing:.3px;text-align:center;
+	    /* 居中对齐，不使用不对称padding */
+	    padding:.75rem;
 }
+/* 虚拟化、位置、在线、负载列：居中对齐 */
+#serversTable thead th:nth-child(4),#serversTable tbody td:nth-child(4),
+#serversTable thead th:nth-child(5),#serversTable tbody td:nth-child(5),
+#serversTable thead th:nth-child(6),#serversTable tbody td:nth-child(6),
+#serversTable thead th:nth-child(7),#serversTable tbody td:nth-child(7){
+	text-align:center;
+}
+
 /* CPU / 内存 / 硬盘 列：居中 + 固定宽度 适配内嵌文字进度条 */
 #serversTable thead th:nth-child(10),#serversTable tbody td:nth-child(10),
 #serversTable thead th:nth-child(11),#serversTable tbody td:nth-child(11),
@@ -326,7 +381,7 @@ body.light .progress-text{
 #serversTable thead th:last-child, #serversTable tbody td:last-child { text-align:center; }
 /* 第13列宽度适配横向条形指示器 */
 #serversTable thead th:nth-child(13),#serversTable tbody td:nth-child(13){
-	width:100px;min-width:100px;max-width:100px;padding:.75rem .5rem;text-align:center;
+	width:var(--col-ping-width);min-width:var(--col-ping-width);max-width:var(--col-ping-width);padding:.75rem .5rem;text-align:center;
 }
 /* 确保ping-combined div在表格单元格中居中 */
 #serversTable tbody td:nth-child(13) {
@@ -375,13 +430,13 @@ body.light .progress-text{
 	#serversTable tbody td:nth-child(13) {display:none;}
 	
 	/* 调整显示列的宽度 - 优化移动端显示 */
-	#serversTable thead th:nth-child(2),#serversTable tbody td:nth-child(2){width:65px;min-width:65px;max-width:65px;} /* 月流量 */
-	#serversTable thead th:nth-child(3),#serversTable tbody td:nth-child(3){width:80px;min-width:80px;max-width:80px;} /* 节点 */
-	#serversTable thead th:nth-child(7),#serversTable tbody td:nth-child(7){width:60px;min-width:60px;max-width:60px;} /* 负载 */
-	#serversTable thead th:nth-child(8),#serversTable tbody td:nth-child(8){width:60px;min-width:60px;max-width:60px;} /* 当前网络 */
-	#serversTable thead th:nth-child(9),#serversTable tbody td:nth-child(9){width:60px;min-width:60px;max-width:60px;} /* 总流量 */
-	#serversTable thead th:nth-child(10),#serversTable tbody td:nth-child(10){width:45px;min-width:45px;max-width:45px;} /* CPU */
-	#serversTable thead th:nth-child(11),#serversTable tbody td:nth-child(11){width:45px;min-width:45px;max-width:45px;} /* 内存 */
+	#serversTable thead th:nth-child(2),#serversTable tbody td:nth-child(2){width:var(--mobile-col-monthly-width);min-width:var(--mobile-col-monthly-width);max-width:var(--mobile-col-monthly-width);text-align:center;} /* 月流量 */
+	#serversTable thead th:nth-child(3),#serversTable tbody td:nth-child(3){width:var(--mobile-col-node-width);min-width:var(--mobile-col-node-width);max-width:var(--mobile-col-node-width);text-align:center;} /* 节点 */
+	#serversTable thead th:nth-child(7),#serversTable tbody td:nth-child(7){width:var(--mobile-col-load-width);min-width:var(--mobile-col-load-width);max-width:var(--mobile-col-load-width);text-align:center;} /* 负载 */
+	#serversTable thead th:nth-child(8),#serversTable tbody td:nth-child(8){width:var(--mobile-col-current-width);min-width:var(--mobile-col-current-width);max-width:var(--mobile-col-current-width);text-align:center;} /* 当前网络 */
+	#serversTable thead th:nth-child(9),#serversTable tbody td:nth-child(9){width:var(--mobile-col-total-width);min-width:var(--mobile-col-total-width);max-width:var(--mobile-col-total-width);text-align:center;} /* 总流量 */
+	#serversTable thead th:nth-child(10),#serversTable tbody td:nth-child(10){width:var(--mobile-col-cpu-width);min-width:var(--mobile-col-cpu-width);max-width:var(--mobile-col-cpu-width);text-align:center;} /* CPU */
+	#serversTable thead th:nth-child(11),#serversTable tbody td:nth-child(11){width:var(--mobile-col-memory-width);min-width:var(--mobile-col-memory-width);max-width:var(--mobile-col-memory-width);text-align:center;} /* 内存 */
 	
 	.modal-box{max-width:100%;border-radius:14px;padding:1rem .95rem;}
 	.modal-content{max-height:65vh;overflow:auto;}
@@ -411,10 +466,27 @@ body.light .progress-text{
 
 /* === 新增：为“月流量 / 当前网络 / 总流量”三列设置最小宽度，防止内容被压缩换行或挤压 === */
 /* 目标最小宽度按示例 "111.1GB|111.1GB" 设计（13 个字符左右），取 16ch 留余量 */
-#serversTable thead th:nth-child(2),#serversTable tbody td:nth-child(2),
-#serversTable thead th:nth-child(8),#serversTable tbody td:nth-child(8),
+/* 月流量列 - 允许响应式缩放 */
+#serversTable thead th:nth-child(2),#serversTable tbody td:nth-child(2){
+	min-width:var(--col-monthly-width); /* 设置最小宽度 */
+	width:var(--col-monthly-width); /* 设置默认宽度 */
+	max-width:none; /* 允许扩展 */
+	text-align:center;
+	font-variant-numeric:tabular-nums;
+}
+/* 当前网络列 - 允许响应式缩放 */
+#serversTable thead th:nth-child(8),#serversTable tbody td:nth-child(8){
+	min-width:var(--col-current-width); /* 设置最小宽度 */
+	width:var(--col-current-width); /* 设置默认宽度 */
+	max-width:none; /* 允许扩展 */
+	text-align:center;
+	font-variant-numeric:tabular-nums;
+}
+/* 总流量列 - 允许响应式缩放 */
 #serversTable thead th:nth-child(9),#serversTable tbody td:nth-child(9){
-	min-width:22ch !important; /* 保留自动宽度，但不小于此值 */
+	min-width:var(--col-total-width); /* 设置最小宽度 */
+	width:var(--col-total-width); /* 设置默认宽度 */
+	max-width:none; /* 允许扩展 */
 	text-align:center;
 	font-variant-numeric:tabular-nums;
 }
