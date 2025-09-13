@@ -333,8 +333,6 @@ body.light .progress-text{
 /* 响应式隐藏非关键列，保持可读性 */
 @media (max-width:1100px){
 	#serversTable{min-width:100%;}
-	#serversTable thead th:nth-child(3),
-	#serversTable tbody td:nth-child(3), /* 节点 */
 	#serversTable thead th:nth-child(4),
 	#serversTable tbody td:nth-child(4), /* 虚拟化 */
 	#serversTable thead th:nth-child(8),
@@ -342,9 +340,7 @@ body.light .progress-text{
 }
 @media (max-width:820px){
 	#serversTable thead th:nth-child(5),
-	#serversTable tbody td:nth-child(5), /* 在线 */
-	#serversTable thead th:nth-child(6),
-	#serversTable tbody td:nth-child(6)  /* 负载 */ {display:none}
+	#serversTable tbody td:nth-child(5)  /* 在线 */ {display:none}
 	.buckets{gap:6px;min-width:100px}
 }
 @media (max-width:640px){
