@@ -361,23 +361,25 @@ body.light .progress-text{
 	/* 隐藏部分列以适应小屏幕 */
 	#serversTable thead th:nth-child(1), /* 协议 */
 	#serversTable tbody td:nth-child(1),
-	#serversTable thead th:nth-child(4), /* 位置 */
+	#serversTable thead th:nth-child(4), /* 虚拟化 */
 	#serversTable tbody td:nth-child(4),
-	#serversTable thead th:nth-child(5), /* 在线 */
+	#serversTable thead th:nth-child(5), /* 位置 */
 	#serversTable tbody td:nth-child(5),
-	#serversTable thead th:nth-child(13), /* 延迟 */
+	#serversTable thead th:nth-child(6), /* 在线 */
+	#serversTable tbody td:nth-child(6),
+	#serversTable thead th:nth-child(8), /* 当前网络 */
+	#serversTable tbody td:nth-child(8),
+	#serversTable thead th:nth-child(13), /* 联通|电信|移动 */
 	#serversTable tbody td:nth-child(13) {display:none;}
 	
-	/* 调整剩余列的宽度 */
+	/* 调整剩余列的宽度 - 根据实际HTML列顺序 */
 	#serversTable thead th:nth-child(2),#serversTable tbody td:nth-child(2){width:120px;min-width:120px;max-width:120px;} /* 月流量 */
 	#serversTable thead th:nth-child(3),#serversTable tbody td:nth-child(3){width:100px;min-width:100px;max-width:100px;} /* 节点 */
-	#serversTable thead th:nth-child(6),#serversTable tbody td:nth-child(6){width:80px;min-width:80px;max-width:80px;} /* 负载 */
-	#serversTable thead th:nth-child(7),#serversTable tbody td:nth-child(7){width:100px;min-width:100px;max-width:100px;} /* 当前网络 */
-	#serversTable thead th:nth-child(8),#serversTable tbody td:nth-child(8){width:100px;min-width:100px;max-width:100px;} /* 总流量 */
-	#serversTable thead th:nth-child(9),#serversTable tbody td:nth-child(9){width:60px;min-width:60px;max-width:60px;} /* CPU */
-	#serversTable thead th:nth-child(10),#serversTable tbody td:nth-child(10){width:60px;min-width:60px;max-width:60px;} /* 内存 */
-	#serversTable thead th:nth-child(11),#serversTable tbody td:nth-child(11){width:60px;min-width:60px;max-width:60px;} /* 硬盘 */
-	#serversTable thead th:nth-child(12),#serversTable tbody td:nth-child(12){width:60px;min-width:60px;max-width:60px;} /* 延迟 */
+	#serversTable thead th:nth-child(7),#serversTable tbody td:nth-child(7){width:80px;min-width:80px;max-width:80px;} /* 负载 */
+	#serversTable thead th:nth-child(9),#serversTable tbody td:nth-child(9){width:100px;min-width:100px;max-width:100px;} /* 总流量 */
+	#serversTable thead th:nth-child(10),#serversTable tbody td:nth-child(10){width:60px;min-width:60px;max-width:60px;} /* CPU */
+	#serversTable thead th:nth-child(11),#serversTable tbody td:nth-child(11){width:60px;min-width:60px;max-width:60px;} /* 内存 */
+	#serversTable thead th:nth-child(12),#serversTable tbody td:nth-child(12){width:60px;min-width:60px;max-width:60px;} /* 硬盘 */
 	
 	.modal-box{max-width:100%;border-radius:14px;padding:1rem .95rem;}
 	.modal-content{max-height:65vh;overflow:auto;}
