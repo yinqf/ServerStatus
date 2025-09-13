@@ -137,9 +137,30 @@ function renderServers(){
   const trafficCls = heavy ? 'caps-traffic duo heavy' : 'caps-traffic duo normal';
     const netNow = humanMinKBFromB(s.network_rx) + ' | ' + humanMinKBFromB(s.network_tx); // 最小单位 KB
     const netTotal = humanMinMBFromB(s.network_in)+' | '+humanMinMBFromB(s.network_out); // 最小单位 MB
-  const p1 = (s.ping_10010||0); const p2 = (s.ping_189||0); const p3 = (s.ping_10086||0);
-  function bucket(p){ const v = Math.max(0, Math.min(100, p)); const level = v>=20?'bad':(v>=10?'warn':'ok'); return `<div class=\"bucket\" data-lv=\"${level}\"><span style=\"--h:${v}%\"></span><label>${v.toFixed(0)}%</label></div>`; }
-  const pingBuckets = `<div class=\"buckets\" title=\"CU/CT/CM\">${bucket(p1)}${bucket(p2)}${bucket(p3)}</div>`;
+  // 使用实际延迟数据（毫秒）和百分比数据
+  const cu_ms = (s.time_10010||0); const ct_ms = (s.time_189||0); const cm_ms = (s.time_10086||0);
+  const cu_pct = (s.ping_10010||0); const ct_pct = (s.ping_189||0); const cm_pct = (s.ping_10086||0);
+  function pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct){ 
+    // 计算最大延迟百分比来决定颜色
+    const maxPct = Math.max(cu_pct, ct_pct, cm_pct);
+    const level = maxPct >= 20 ? 'bad' : (maxPct >= 10 ? 'warn' : 'ok');
+    
+    // 格式化显示值
+    const cuDisplay = cu_pct > 0 ? (cu_pct < 100 ? cu_pct.toFixed(0) + '%' : '99%') : '0%';
+    const ctDisplay = ct_pct > 0 ? (ct_pct < 100 ? ct_pct.toFixed(0) + '%' : '99%') : '0%';
+    const cmDisplay = cm_pct > 0 ? (cm_pct < 100 ? cm_pct.toFixed(0) + '%' : '99%') : '0%';
+    
+    const title = `联通: ${cu_ms}ms (${cu_pct.toFixed(1)}%) | 电信: ${ct_ms}ms (${ct_pct.toFixed(1)}%) | 移动: ${cm_ms}ms (${cm_pct.toFixed(1)}%)`;
+    
+    return `<div class=\"ping-combined\" data-lv=\"${level}\" title=\"${title}\">
+      <div class=\"provider-group\">
+        <span class=\"provider-item\">${cuDisplay}</span>
+        <span class=\"provider-item\">${ctDisplay}</span>
+        <span class=\"provider-item\">${cmDisplay}</span>
+      </div>
+    </div>`; 
+  }
+  const pingBuckets = pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct);
   // 唯一 key 已附加为 s._key（如需使用）
   const rowCursor = online? 'pointer':'default';
     const highLoad = online && ( (s.cpu||0)>=90 || (memPct)>=90 || (hddPct)>=90 );
@@ -172,18 +193,22 @@ function renderServers(){
 
   // 仪表盘无需历史 spark 小图
 }
-// 生成仪表盘 (圆形 conic-gradient)
+// 生成统一进度条
 function gaugeHTML(type,val){
   const pct = Math.max(0,Math.min(100,val));
-  const p = (pct/100).toFixed(3);
-  const warnAttr = pct>=90? 'data-bad' : (pct>=50? 'data-warn' : '');
-    return `<div class="gauge-half" data-type="${type}" ${warnAttr} style="--p:${p}" title="${labelOf(type)} ${pct.toFixed(0)}%">
-      <svg viewBox="0 0 100 50" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <path class="track" d="M10 50 A40 40 0 0 1 90 50" />
-        <path class="arc" d="M10 50 A40 40 0 0 1 90 50" />
-      </svg>
-      <span>${pct.toFixed(0)}%</span>
-    </div>`;
+  // 绿黄红三色系统
+  let colorClass = 'low';
+  if (pct >= 91) colorClass = 'critical';      // 红色：91-100%
+  else if (pct >= 81) colorClass = 'high';     // 橙色：81-90%
+  else if (pct >= 61) colorClass = 'medium';   // 黄色：61-80%
+  // else colorClass = 'low';                  // 绿色：0-60%
+  
+  return `<div class="progress-wrapper">
+    <div class="progress-bar ${colorClass}" title="${labelOf(type)} ${pct.toFixed(0)}%">
+      <div class="progress-fill" style="width:${pct}%"></div>
+      <span class="progress-text">${pct.toFixed(0)}%</span>
+    </div>
+  </div>`;
 }
 function labelOf(t){ return t==='cpu'?'CPU': t==='mem'?'内存':'硬盘'; }
 function renderServersCards(){
@@ -208,9 +233,30 @@ function renderServersCards(){
   const trafficCls = heavy ? 'caps-traffic duo heavy sm' : 'caps-traffic duo normal sm';
     const netNow = humanMinKBFromB(s.network_rx)+' | '+humanMinKBFromB(s.network_tx);
     const netTotal = humanMinMBFromB(s.network_in)+' | '+humanMinMBFromB(s.network_out);
-    const p1 = (s.ping_10010||0); const p2=(s.ping_189||0); const p3=(s.ping_10086||0);
-    function bucket(p){ const v=Math.max(0,Math.min(100,p)); const level = v>=20?'bad':(v>=10?'warn':'ok'); return `<div class=\"bucket\" data-lv=\"${level}\"><span style=\"--h:${v}%\"></span><label>${v.toFixed(0)}%</label></div>`; }
-    const buckets = `<div class=\"buckets\">${bucket(p1)}${bucket(p2)}${bucket(p3)}</div>`;
+    // 使用实际延迟数据（毫秒）和百分比数据
+    const cu_ms = (s.time_10010||0); const ct_ms = (s.time_189||0); const cm_ms = (s.time_10086||0);
+    const cu_pct = (s.ping_10010||0); const ct_pct = (s.ping_189||0); const cm_pct = (s.ping_10086||0);
+    function pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct){ 
+      // 计算最大延迟百分比来决定颜色
+      const maxPct = Math.max(cu_pct, ct_pct, cm_pct);
+      const level = maxPct >= 20 ? 'bad' : (maxPct >= 10 ? 'warn' : 'ok');
+      
+      // 格式化显示值
+      const cuDisplay = cu_pct > 0 ? (cu_pct < 100 ? cu_pct.toFixed(0) + '%' : '99%') : '0%';
+      const ctDisplay = ct_pct > 0 ? (ct_pct < 100 ? ct_pct.toFixed(0) + '%' : '99%') : '0%';
+      const cmDisplay = cm_pct > 0 ? (cm_pct < 100 ? cm_pct.toFixed(0) + '%' : '99%') : '0%';
+      
+      const title = `联通: ${cu_ms}ms (${cu_pct.toFixed(1)}%) | 电信: ${ct_ms}ms (${ct_pct.toFixed(1)}%) | 移动: ${cm_ms}ms (${cm_pct.toFixed(1)}%)`;
+      
+      return `<div class=\"ping-combined\" data-lv=\"${level}\" title=\"${title}\">
+        <div class=\"provider-group\">
+          <span class=\"provider-item\">${cuDisplay}</span>
+          <span class=\"provider-item\">${ctDisplay}</span>
+          <span class=\"provider-item\">${cmDisplay}</span>
+        </div>
+      </div>`; 
+    }
+    const buckets = pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct);
   // 唯一 key 已附加为 s._key（如需使用）
   const highLoad = online && ( (s.cpu||0)>=90 || (memPct)>=90 || (hddPct)>=90 );
   html += `<div class=\"card${online?'':' offline'}${highLoad?' high-load':''}${osClass(s.os)}\" data-idx=\"${idx}\" data-online=\"${online?1:0}\">\n      <button class=\"expand-btn\" aria-label=\"展开\">▼</button>\n      <div class=\"card-header\">\n        <div class=\"card-title\">${s.name||'-'} <span class=\"tag\">${s.location||'-'}</span></div>\n        ${pill}\n      </div>\n      <div class=\"kvlist\">\n        <div><span class=\"key\">负载</span><span>${s.load_1==-1?'–':s.load_1?.toFixed(2)}</span></div>\n        <div><span class=\"key\">在线</span><span>${s.uptime||'-'}</span></div>\n        <div><span class=\"key\">月流量</span><span><span class=\"${trafficCls}\" title=\"本月下行 | 上行 (≥500GB 触发红黄)\"><span class=\"half in\">${monthIn}</span><span class=\"half out\">${monthOut}</span></span></span></div>\n        <div><span class=\"key\">网络</span><span>${netNow}</span></div>\n        <div><span class=\"key\">总流量</span><span>${netTotal}</span></div>\n        <div><span class=\"key\">CPU</span><span>${s.cpu||0}%</span></div>\n        <div><span class=\"key\">内存</span><span>${memPct.toFixed(0)}%</span></div>\n        <div><span class=\"key\">硬盘</span><span>${hddPct.toFixed(0)}%</span></div>\n      </div>\n      ${buckets}\n      <div class=\"expand-area\">\n        <div style=\"font-size:.65rem;opacity:.7;margin-top:.3rem\">${online?'点击卡片可查看详情':'离线，不可查看详情'}</div>\n      </div>\n    </div>`;
