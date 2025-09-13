@@ -267,7 +267,9 @@ body.light .progress-text{
   display:flex;
   align-items:center;
   justify-content:center;
-  min-width:90px;
+  width:100px;
+  min-width:100px;
+  max-width:100px;
   height:20px;
   border-radius:6px;
   padding:0 6px;
@@ -324,7 +326,13 @@ body.light .progress-text{
 #serversTable thead th:last-child, #serversTable tbody td:last-child { text-align:center; }
 /* 第13列宽度适配横向条形指示器 */
 #serversTable thead th:nth-child(13),#serversTable tbody td:nth-child(13){
-	width:100px;min-width:100px;max-width:100px;padding:.75rem .5rem;
+	width:100px;min-width:100px;max-width:100px;padding:.75rem .5rem;text-align:center;
+}
+/* 确保ping-combined div在表格单元格中居中 */
+#serversTable tbody td:nth-child(13) {
+	display:flex;
+	justify-content:center;
+	align-items:center;
 }
 /* 调整“总流量”表头（第9列）padding 使标题文字居中，不受正文额外右 padding 影响 */
 #serversTable thead th:nth-child(9){padding-left:.75rem;padding-right:.75rem;}
