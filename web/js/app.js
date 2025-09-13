@@ -79,7 +79,7 @@ function osLabel(os){
 
 async function fetchData(){
   try {
-    const r = await fetch('https://tz.xty.app/json/stats.json?_='+Date.now());
+    const r = await fetch('https://tz-web-api.xty.app/json/stats.json?_='+Date.now());
     if(!r.ok) throw new Error(r.status);
     const j = await r.json();
     if(j.reload) location.reload();
@@ -140,25 +140,25 @@ function renderServers(){
   // 使用实际延迟数据（毫秒）和百分比数据
   const cu_ms = (s.time_10010||0); const ct_ms = (s.time_189||0); const cm_ms = (s.time_10086||0);
   const cu_pct = (s.ping_10010||0); const ct_pct = (s.ping_189||0); const cm_pct = (s.ping_10086||0);
-  function pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct){ 
+  function pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct){
     // 计算最大延迟百分比来决定颜色
     const maxPct = Math.max(cu_pct, ct_pct, cm_pct);
     const level = maxPct >= 20 ? 'bad' : (maxPct >= 10 ? 'warn' : 'ok');
-    
+
     // 格式化显示值
     const cuDisplay = cu_pct > 0 ? (cu_pct < 100 ? cu_pct.toFixed(0) + '%' : '99%') : '0%';
     const ctDisplay = ct_pct > 0 ? (ct_pct < 100 ? ct_pct.toFixed(0) + '%' : '99%') : '0%';
     const cmDisplay = cm_pct > 0 ? (cm_pct < 100 ? cm_pct.toFixed(0) + '%' : '99%') : '0%';
-    
+
     const title = `联通: ${cu_ms}ms (${cu_pct.toFixed(1)}%) | 电信: ${ct_ms}ms (${ct_pct.toFixed(1)}%) | 移动: ${cm_ms}ms (${cm_pct.toFixed(1)}%)`;
-    
+
     return `<div class=\"ping-combined\" data-lv=\"${level}\" title=\"${title}\">
       <div class=\"provider-group\">
         <span class=\"provider-item\">${cuDisplay}</span>
         <span class=\"provider-item\">${ctDisplay}</span>
         <span class=\"provider-item\">${cmDisplay}</span>
       </div>
-    </div>`; 
+    </div>`;
   }
   const pingBuckets = pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct);
   // 唯一 key 已附加为 s._key（如需使用）
@@ -202,7 +202,7 @@ function gaugeHTML(type,val){
   else if (pct >= 81) colorClass = 'high';     // 橙色：81-90%
   else if (pct >= 61) colorClass = 'medium';   // 黄色：61-80%
   // else colorClass = 'low';                  // 绿色：0-60%
-  
+
   return `<div class="progress-wrapper">
     <div class="progress-bar ${colorClass}" title="${labelOf(type)} ${pct.toFixed(0)}%">
       <div class="progress-fill" style="width:${pct}%"></div>
@@ -236,25 +236,25 @@ function renderServersCards(){
     // 使用实际延迟数据（毫秒）和百分比数据
     const cu_ms = (s.time_10010||0); const ct_ms = (s.time_189||0); const cm_ms = (s.time_10086||0);
     const cu_pct = (s.ping_10010||0); const ct_pct = (s.ping_189||0); const cm_pct = (s.ping_10086||0);
-    function pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct){ 
+    function pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct){
       // 计算最大延迟百分比来决定颜色
       const maxPct = Math.max(cu_pct, ct_pct, cm_pct);
       const level = maxPct >= 20 ? 'bad' : (maxPct >= 10 ? 'warn' : 'ok');
-      
+
       // 格式化显示值
       const cuDisplay = cu_pct > 0 ? (cu_pct < 100 ? cu_pct.toFixed(0) + '%' : '99%') : '0%';
       const ctDisplay = ct_pct > 0 ? (ct_pct < 100 ? ct_pct.toFixed(0) + '%' : '99%') : '0%';
       const cmDisplay = cm_pct > 0 ? (cm_pct < 100 ? cm_pct.toFixed(0) + '%' : '99%') : '0%';
-      
+
       const title = `联通: ${cu_ms}ms (${cu_pct.toFixed(1)}%) | 电信: ${ct_ms}ms (${ct_pct.toFixed(1)}%) | 移动: ${cm_ms}ms (${cm_pct.toFixed(1)}%)`;
-      
+
       return `<div class=\"ping-combined\" data-lv=\"${level}\" title=\"${title}\">
         <div class=\"provider-group\">
           <span class=\"provider-item\">${cuDisplay}</span>
           <span class=\"provider-item\">${ctDisplay}</span>
           <span class=\"provider-item\">${cmDisplay}</span>
         </div>
-      </div>`; 
+      </div>`;
     }
     const buckets = pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct);
   // 唯一 key 已附加为 s._key（如需使用）
@@ -531,18 +531,18 @@ function drawLatencyChart(key){
   const canvas = document.getElementById('latChart');
   if(!canvas || !data) return;
   const ctx = canvas.getContext('2d');
-  
+
   // 修复高DPI屏幕文字模糊问题
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
-  const W = rect.width; 
+  const W = rect.width;
   const H = 150; // 固定高度150px
-  
+
   canvas.width = W * dpr;
   canvas.height = H * dpr;
   canvas.style.width = W + 'px';
   canvas.style.height = H + 'px';
-  
+
   ctx.scale(dpr, dpr);
   ctx.clearRect(0,0,W,H);
   const padL=40, padR=10, padT=10, padB=18;
@@ -588,22 +588,22 @@ window.addEventListener('resize', ()=>{
 function drawLoadChart(key){
   const L = S.loadHist[key];
   const canvas = document.getElementById('loadChart');
-  if(!canvas) return; 
+  if(!canvas) return;
   const ctx = canvas.getContext('2d');
-  
+
   // 修复高DPI屏幕文字模糊问题
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
   const W = rect.width;
   const H = 120; // 固定高度120px
-  
+
   canvas.width = W * dpr;
   canvas.height = H * dpr;
   canvas.style.width = W + 'px';
   canvas.style.height = H + 'px';
-  
+
   ctx.scale(dpr, dpr);
-  
+
   if(!L){ ctx.clearRect(0,0,W,H); return; }
   const l1=L.l1||[], l5=L.l5||[], l15=L.l15||[];
   ctx.clearRect(0,0,W,H);
