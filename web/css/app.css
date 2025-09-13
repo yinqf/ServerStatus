@@ -348,16 +348,38 @@ body.light .progress-text{
 	.buckets{gap:6px;min-width:100px}
 }
 @media (max-width:640px){
-	#serversTable thead th:nth-child(4),
-	#serversTable tbody td:nth-child(4) /* 位置 */ {display:none}
-	.topbar{padding:.6rem .8rem}
-	.actions{gap:.5rem}
-	.wrapper{padding:0 .7rem}
-	#panel-servers .table-wrap{display:none;}
-	#serversCards{display:grid!important;grid-template-columns:1fr;gap:.75rem;margin-top:.5rem;}
-	/* 服务与证书移动端卡片 */
-	#panel-monitors .table-wrap, #panel-ssl .table-wrap{display:none;}
-	#monitorsCards,#sslCards{display:grid!important;grid-template-columns:1fr;gap:.75rem;margin-top:.5rem;}
+	.topbar{padding:.8rem 1rem}
+	.actions{gap:.6rem}
+	.wrapper{padding:0 1rem;gap:1rem}
+	
+	/* 移动端表格优化 */
+	.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+	table.data{min-width:800px;font-size:.85rem;}
+	table.data thead th{font-size:.75rem;padding:.5rem .4rem;}
+	table.data tbody td{padding:.4rem .4rem;font-size:.8rem;}
+	
+	/* 隐藏部分列以适应小屏幕 */
+	#serversTable thead th:nth-child(4), /* 位置 */
+	#serversTable tbody td:nth-child(4),
+	#serversTable thead th:nth-child(5), /* 在线 */
+	#serversTable tbody td:nth-child(5),
+	#serversTable thead th:nth-child(6), /* 负载 */
+	#serversTable tbody td:nth-child(6),
+	#serversTable thead th:nth-child(7), /* 当前网络 */
+	#serversTable tbody td:nth-child(7),
+	#serversTable thead th:nth-child(8), /* 总流量 */
+	#serversTable tbody td:nth-child(8) {display:none;}
+	
+	/* 调整剩余列的宽度 */
+	#serversTable thead th:nth-child(1),#serversTable tbody td:nth-child(1){width:60px;min-width:60px;max-width:60px;}
+	#serversTable thead th:nth-child(2),#serversTable tbody td:nth-child(2){width:120px;min-width:120px;max-width:120px;}
+	#serversTable thead th:nth-child(3),#serversTable tbody td:nth-child(3){width:80px;min-width:80px;max-width:80px;}
+	#serversTable thead th:nth-child(9),#serversTable tbody td:nth-child(9){width:60px;min-width:60px;max-width:60px;}
+	#serversTable thead th:nth-child(10),#serversTable tbody td:nth-child(10){width:60px;min-width:60px;max-width:60px;}
+	#serversTable thead th:nth-child(11),#serversTable tbody td:nth-child(11){width:60px;min-width:60px;max-width:60px;}
+	#serversTable thead th:nth-child(12),#serversTable tbody td:nth-child(12){width:60px;min-width:60px;max-width:60px;}
+	#serversTable thead th:nth-child(13),#serversTable tbody td:nth-child(13){width:100px;min-width:100px;max-width:100px;}
+	
 	.modal-box{max-width:100%;border-radius:14px;padding:1rem .95rem;}
 	.modal-content{max-height:65vh;overflow:auto;}
 }
@@ -393,7 +415,23 @@ body.light .progress-text{
 	text-align:center;
 	font-variant-numeric:tabular-nums;
 }
-.cards .card{border:1px solid var(--border);border-radius:12px;padding:.75rem .85rem;background:linear-gradient(145deg,var(--bg),var(--bg-alt));display:flex;flex-direction:column;gap:.45rem;position:relative;}
+.cards .card{
+  border:0;
+  border-radius:16px;
+  padding:1.25rem;
+  background:var(--bg-alt);
+  box-shadow:0 4px 20px -4px rgba(0,0,0,.12), 0 0 0 1px rgba(255,255,255,.05);
+  display:flex;
+  flex-direction:column;
+  gap:.8rem;
+  position:relative;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  backdrop-filter:blur(10px);
+}
+.cards .card:hover{
+  box-shadow:0 8px 32px -8px rgba(0,0,0,.2), 0 0 0 1px rgba(255,255,255,.1);
+  transform:translateY(-2px);
+}
 .cards .card.offline{opacity:.6;}
 .cards .card.high-load{border-color:rgba(239,68,68,.6);background:linear-gradient(180deg, rgba(239,68,68,.22), rgba(239,68,68,.12));box-shadow:0 0 0 1px rgba(239,68,68,.48),0 6px 18px -6px rgba(239,68,68,.28);} 
 table.data tbody tr.high-load{background:rgba(239,68,68,.18) !important;} 
@@ -432,16 +470,78 @@ table.data tbody tr.high-load:hover{background:rgba(239,68,68,.26) !important;}
 
 
 /* 旧进度条相关样式已清理 */
-.cards .card-header{display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
-.cards .card-title{font-weight:600;font-size:1rem;}
-.cards .tag{font-size:.75rem;padding:.15rem .4rem;border-radius:4px;background:var(--border);letter-spacing:.5px;}
-.cards .status-pill{font-size:.7rem;padding:.2rem .45rem;border-radius:999px;font-weight:500;}
-.cards .status-pill.on{background:var(--ok);color:#fff;}
-.cards .status-pill.off{background:var(--danger);color:#fff;}
-.cards .kvlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem .75rem;font-size:.8rem;line-height:1.25;}
-.cards .kvlist div{display:flex;flex-direction:column;}
-.cards .kvlist span.key{opacity:.6;}
-.cards .buckets{margin-top:.25rem;}
+.cards .card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.8rem;
+  margin-bottom:.2rem;
+  padding-bottom:.6rem;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.cards .card-title{
+  font-weight:700;
+  font-size:1.2rem;
+  color:var(--text);
+  letter-spacing:-.02em;
+  line-height:1.2;
+}
+.cards .tag{
+  font-size:.75rem;
+  padding:.3rem .6rem;
+  border-radius:20px;
+  background:rgba(255,255,255,.08);
+  color:var(--text-dim);
+  letter-spacing:.2px;
+  font-weight:500;
+  border:1px solid rgba(255,255,255,.1);
+}
+.cards .status-pill{
+  font-size:.8rem;
+  padding:.4rem .8rem;
+  border-radius:20px;
+  font-weight:600;
+  letter-spacing:.3px;
+  box-shadow:0 2px 8px -2px rgba(0,0,0,.2);
+}
+.cards .status-pill.on{
+  background:linear-gradient(135deg, var(--ok), color-mix(in srgb, var(--ok) 80%, #000));
+  color:#fff;
+}
+.cards .status-pill.off{
+  background:linear-gradient(135deg, var(--danger), color-mix(in srgb, var(--danger) 80%, #000));
+  color:#fff;
+}
+.cards .kvlist{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.6rem 1rem;
+  font-size:.9rem;
+  line-height:1.4;
+}
+.cards .kvlist div{
+  display:flex;
+  flex-direction:column;
+  gap:.2rem;
+  padding:.5rem;
+  background:rgba(255,255,255,.03);
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,.05);
+}
+.cards .kvlist span.key{
+  opacity:.8;
+  font-size:.7rem;
+  color:var(--text-dim);
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+.cards .kvlist span.value{
+  font-weight:600;
+  color:var(--text);
+  font-size:.85rem;
+}
+.cards .buckets{margin-top:.4rem;display:flex;justify-content:center;}
 .cards .expand-btn{position:absolute;top:.5rem;right:.5rem;background:transparent;border:0;color:var(--text-dim);cursor:pointer;font-size:.9rem;padding:.2rem;}
 .cards .expand-btn:focus, .cards .expand-btn:hover{color:var(--text);}
 .cards .expand-area{margin-top:.4rem;display:none;animation:fadeIn .25s ease;}

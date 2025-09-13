@@ -214,62 +214,8 @@ function labelOf(t){ return t==='cpu'?'CPU': t==='mem'?'内存':'硬盘'; }
 function renderServersCards(){
   const wrap = document.getElementById('serversCards');
   if(!wrap) return;
-  // 仅在窄屏时显示 (和 CSS 一致判断, 可稍放宽避免闪烁)
-  if(window.innerWidth>700){ wrap.innerHTML=''; return; }
-  let html='';
-  S.servers.forEach((s,idx)=>{
-    const online = s.online4||s.online6;
-    const proto = online ? (s.online4 && s.online6? '双栈': s.online4? 'IPv4':'IPv6') : '离线';
-    const pill = `<span class="status-pill ${online?'on':'off'}">${proto}</span>`;
-  const memPct = s.memory_total? (s.memory_used/s.memory_total*100):0;
-  const hddPct = s.hdd_total? (s.hdd_used/s.hdd_total*100):0;
-  // 月流量（移动端）并应用 500GB 阈值配色逻辑
-  const monthInBytes = (s.network_in - s.last_network_in) || 0; // B
-  const monthOutBytes = (s.network_out - s.last_network_out) || 0;
-  const monthIn = humanMinMBFromB(monthInBytes);
-  const monthOut = humanMinMBFromB(monthOutBytes);
-  const HEAVY_THRESHOLD = 500 * 1000 * 1000 * 1000; // 500GB
-  const heavy = monthInBytes >= HEAVY_THRESHOLD || monthOutBytes >= HEAVY_THRESHOLD;
-  const trafficCls = heavy ? 'caps-traffic duo heavy sm' : 'caps-traffic duo normal sm';
-    const netNow = humanMinKBFromB(s.network_rx)+' | '+humanMinKBFromB(s.network_tx);
-    const netTotal = humanMinMBFromB(s.network_in)+' | '+humanMinMBFromB(s.network_out);
-    // 使用实际延迟数据（毫秒）和百分比数据
-    const cu_ms = (s.time_10010||0); const ct_ms = (s.time_189||0); const cm_ms = (s.time_10086||0);
-    const cu_pct = (s.ping_10010||0); const ct_pct = (s.ping_189||0); const cm_pct = (s.ping_10086||0);
-    function pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct){
-      // 计算最大延迟百分比来决定颜色
-      const maxPct = Math.max(cu_pct, ct_pct, cm_pct);
-      const level = maxPct >= 20 ? 'bad' : (maxPct >= 10 ? 'warn' : 'ok');
-
-      // 格式化显示值
-      const cuDisplay = cu_pct > 0 ? (cu_pct < 100 ? cu_pct.toFixed(0) + '%' : '99%') : '0%';
-      const ctDisplay = ct_pct > 0 ? (ct_pct < 100 ? ct_pct.toFixed(0) + '%' : '99%') : '0%';
-      const cmDisplay = cm_pct > 0 ? (cm_pct < 100 ? cm_pct.toFixed(0) + '%' : '99%') : '0%';
-
-      const title = `联通: ${cu_ms}ms (${cu_pct.toFixed(1)}%) | 电信: ${ct_ms}ms (${ct_pct.toFixed(1)}%) | 移动: ${cm_ms}ms (${cm_pct.toFixed(1)}%)`;
-
-      return `<div class=\"ping-combined\" data-lv=\"${level}\" title=\"${title}\">
-        <div class=\"provider-group\">
-          <span class=\"provider-item\">${cuDisplay}</span>
-          <span class=\"provider-item\">${ctDisplay}</span>
-          <span class=\"provider-item\">${cmDisplay}</span>
-        </div>
-      </div>`;
-    }
-    const buckets = pingCombined(cu_ms, cu_pct, ct_ms, ct_pct, cm_ms, cm_pct);
-  // 唯一 key 已附加为 s._key（如需使用）
-  const highLoad = online && ( (s.cpu||0)>=90 || (memPct)>=90 || (hddPct)>=90 );
-  html += `<div class=\"card${online?'':' offline'}${highLoad?' high-load':''}${osClass(s.os)}\" data-idx=\"${idx}\" data-online=\"${online?1:0}\">\n      <button class=\"expand-btn\" aria-label=\"展开\">▼</button>\n      <div class=\"card-header\">\n        <div class=\"card-title\">${s.name||'-'} <span class=\"tag\">${s.location||'-'}</span></div>\n        ${pill}\n      </div>\n      <div class=\"kvlist\">\n        <div><span class=\"key\">负载</span><span>${s.load_1==-1?'–':s.load_1?.toFixed(2)}</span></div>\n        <div><span class=\"key\">在线</span><span>${s.uptime||'-'}</span></div>\n        <div><span class=\"key\">月流量</span><span><span class=\"${trafficCls}\" title=\"本月下行 | 上行 (≥500GB 触发红黄)\"><span class=\"half in\">${monthIn}</span><span class=\"half out\">${monthOut}</span></span></span></div>\n        <div><span class=\"key\">网络</span><span>${netNow}</span></div>\n        <div><span class=\"key\">总流量</span><span>${netTotal}</span></div>\n        <div><span class=\"key\">CPU</span><span>${s.cpu||0}%</span></div>\n        <div><span class=\"key\">内存</span><span>${memPct.toFixed(0)}%</span></div>\n        <div><span class=\"key\">硬盘</span><span>${hddPct.toFixed(0)}%</span></div>\n      </div>\n      ${buckets}\n      <div class=\"expand-area\">\n        <div style=\"font-size:.65rem;opacity:.7;margin-top:.3rem\">${online?'点击卡片可查看详情':'离线，不可查看详情'}</div>\n      </div>\n    </div>`;
-  });
-  wrap.innerHTML = html || '<div class="muted" style="font-size:.75rem;text-align:center;padding:1rem;">无数据</div>';
-  wrap.querySelectorAll('.card').forEach(card=>{
-    const idx = parseInt(card.getAttribute('data-idx'));
-    card.addEventListener('click', e=>{
-      if(e.target.classList.contains('expand-btn')){ card.classList.toggle('expanded'); e.stopPropagation(); return;}
-      if(card.getAttribute('data-online')!=='1') return; // 离线不弹
-      openDetail(idx);
-    });
-  });
+  // 移动端也使用表格显示，不显示卡片
+  wrap.innerHTML='';
 }
 
 function renderMonitors(){
